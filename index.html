@@ -6,11 +6,10 @@
   <title>Portfolio</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: #0a0a0a;
       color: #f0f0f0;
-      font-family: 'Forza', serif;
+      font-family: 'Georgia', serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -18,7 +17,6 @@
       justify-content: center;
       padding: 24px 16px;
     }
-
     h1 {
       font-size: 13px;
       font-weight: 400;
@@ -29,7 +27,6 @@
       opacity: 0.85;
       text-align: center;
     }
-
     .sub {
       font-size: 11px;
       letter-spacing: 0.15em;
@@ -39,7 +36,6 @@
       opacity: 0.9;
       text-align: center;
     }
-
     .wrap {
       position: relative;
       width: 100%;
@@ -48,19 +44,16 @@
       touch-action: none;
     }
     .wrap.dragging { cursor: grabbing; }
-
     .scene {
       position: relative;
       width: 100%;
       padding-bottom: 61.5%;
     }
-
     .track {
       position: absolute;
       inset: 0;
       pointer-events: none;
     }
-
     .node {
       position: absolute;
       border-radius: 50%;
@@ -78,13 +71,12 @@
     }
     .node.active { background: #461D7C; }
     .node.active svg { fill: #FDD023; }
-
     .panel {
       width: 100%;
       max-width: 520px;
       margin-top: 32px;
       padding: 0 4px 0 16px;
-      border-left: 2px solid #461D7C;
+      border-left: 2px solid transparent;
       min-height: 60px;
     }
     .panel h3 {
@@ -138,7 +130,7 @@
     </div>
   </div>
 
-  <div class="panel" id="panel" style="border-left-color: transparent;">
+  <div class="panel" id="panel">
     <h3 id="ptitle"></h3>
     <p id="pdesc"></p>
   </div>
@@ -153,8 +145,8 @@
 
     const data = [
       {
-        label: 'About me & goals',
-        desc: 'Your bio, what drives you, and where you\'re headed.',
+        label: 'About Me',
+        desc: 'From Northeast Louisiana. Lived and worked in Japan, Guam, Alaska, and across the U.S. — experiences that shaped how I see things and approach challenges.\n\nBig on growth and learning. I try to move with purpose, build real skills, put out solid work, and be someone people can rely on.\n\nInto bream and bass fishing, LSU Tigers baseball, faith, and all things tech. Right now focused on being a student and getting better step by step — with more to come.',
         link: null
       },
       {
@@ -253,6 +245,7 @@
         nodes.forEach(x => x.classList.remove('active'));
         nodes[hit].classList.add('active');
         ptitle.textContent = data[hit].label;
+        pdesc.style.whiteSpace = 'pre-line';
         pdesc.textContent  = data[hit].desc;
         panel.style.borderLeftColor = '#461D7C';
         const old = panel.querySelector('.resume-btn');
