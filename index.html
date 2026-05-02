@@ -1,99 +1,254 @@
-<!doctype html>
-<html class="no-js" lang="en">
-  <head>
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Brandon Knight | Portfolio</title>
-    <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
-  </head>
-  <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <div class="off-canvas-wrapper">
-      <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+    body {
+      background: #0a0a0a;
+      color: #f0f0f0;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-        <div class="off-canvas position-left reveal-for-large" id="my-info" data-off-canvas data-position="left">
-          <div class="row column">
-            <br>
-            <img class="thumbnail" src="https://preview.redd.it/my-friend-keeps-sending-these-hamsters-as-reaction-images-v0-187sjamy2vmf1.jpeg?width=736&format=pjpg&auto=webp&s=356fa38c1d91aaf87360d26308813ae1b8af3b46" alt="Brandon Knight">
-            <h5>Brandon Knight</h5>
-            <p>
-              Student at Louisiana State University.
-              This site is being setup for ISDS 3107.
-            </p>
-          </div>
-        </div>
+    h1 {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #FDD023;
+      margin-bottom: 4px;
+      opacity: 0.85;
+    }
 
-        <div class="off-canvas-content" data-off-canvas-content>
-          <div class="title-bar hide-for-large">
-            <div class="title-bar-left">
-              <button class="menu-icon" type="button" data-open="my-info"></button>
-              <span class="title-bar-title">Brandon Knight</span>
-            </div>
-          </div>
+    .sub {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #461D7C;
+      margin-bottom: 48px;
+      opacity: 0.9;
+    }
 
-          <div class="callout primary">
-            <div class="row column">
-              <h1>Welcome</h1>
-              <p class="lead">
-                This is my personal portfolio created for coursework.
-              </p>
-            </div>
-          </div>
+    .wrap {
+      position: relative;
+      width: 520px;
+      height: 320px;
+      cursor: grab;
+    }
+    .wrap.dragging { cursor: grabbing; }
 
-          <div class="row small-up-2 medium-up-3 large-up-4">
-            <div class="column">
-              <img class="thumbnail" src="https://ih1.redbubble.net/image.3415125897.0235/st,small,507x507-pad,600x600,f8f8f8.jpg">
-              <h5>Assignment 1</h5>
-            </div>
-            <div class="column">
-              <img class="thumbnail" src="https://stickersforyourstuff.com/cdn/shop/files/stussy_webpng_grande.png?v=1709040833">
-              <h5>Assignment 2</h5>
-            </div>
-            <div class="column">
-              <img class="thumbnail" src="https://www.krauseschocolates.com/cdn/shop/products/LARGE_LETTER_U_grande.jpg?v=1494017334">
-              <h5>Assignment 3</h5>
-            </div>
-            <div class="column">
-              <img class="thumbnail" src="https://collegewallart.com/cdn/shop/products/LSU-DA052CB-LSU-Mike-single-layer-dimensional-DIMENSIONAL-WEB_600x.jpg?v=1608083749">
-              <h5>Assignment 4</h5>
-            </div>
-          </div>
+    .track {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
 
-          <hr>
+    .node {
+      position: absolute;
+      width: 53px; height: 53px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      background: transparent;
+      border: 1.5px solid #461D7C;
+      transition: border-color 0.2s;
+      pointer-events: none;
+    }
+    .node svg {
+      width: 22px; height: 22px;
+      fill: #461D7C;
+      transition: fill 0.2s;
+    }
+    .node.active {
+      background: #461D7C;
+    }
+    .node.active svg { fill: #FDD023; }
 
-          <div class="row">
-            <div class="medium-6 columns">
-              <h3>Contact</h3>
-              <p>
-                You cannot reach me using the form (Not yet at least).
-              </p>
-            </div>
+    .panel {
+      width: 520px;
+      margin-top: 36px;
+      padding: 0 4px 0 16px;
+      border-left: 2px solid #461D7C;
+      min-height: 60px;
+      transition: opacity 0.3s;
+    }
+    .panel h3 {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #FDD023;
+      margin-bottom: 6px;
+    }
+    .panel p {
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.7;
+    }
 
-            <div class="medium-6 columns">
-              <label>Name
-                <input type="text" placeholder="Name">
-              </label>
-              <label>Email
-                <input type="email" placeholder="Email">
-              </label>
-              <label>
-                Message
-                <textarea placeholder="Message"></textarea>
-              </label>
-              <input type="submit" class="button expanded" value="Submit">
-            </div>
-          </div>
+    .hint {
+      margin-top: 28px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
 
-        </div>
-      </div>
+  <h1>Brandon Knight</h1>
+  <p class="sub">Portfolio</p>
+
+  <div class="wrap" id="wrap">
+    <svg class="track" viewBox="0 0 520 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="260" cy="160" rx="210" ry="115"
+        stroke="#FDD023" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.18"/>
+    </svg>
+    <div class="node" id="n0">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
     </div>
+    <div class="node" id="n1">
+      <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.33C18 2.53 15.47 0 12 0S6 2.53 6 4.67c0 .45.11.89.18 1.33H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM12 2c1.34 0 2.67.89 2.67 2.67 0 .9-.4 1.68-1 2.23V6H10.33v-.1c-.6-.55-1-1.33-1-2.23C9.33 2.89 10.66 2 12 2zm0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6 8H6v-1.5c0-2 4-3 6-3s6 1 6 3V20z"/></svg>
+    </div>
+    <div class="node" id="n2">
+      <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+    </div>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script>
-    <script>
-      $(document).foundation();
-    </script>
-  </body>
+  <div class="panel" id="panel">
+    <h3 id="ptitle">Select an icon</h3>
+    <p id="pdesc">Click any node to expand its section.</p>
+  </div>
+
+  <p class="hint">drag to spin</p>
+
+  <script>
+    const cx = 260, cy = 160, rx = 210, ry = 115;
+    const nodes = document.querySelectorAll('.node');
+    const ptitle = document.getElementById('ptitle');
+    const pdesc  = document.getElementById('pdesc');
+    const wrap   = document.getElementById('wrap');
+
+    const data = [
+      { label: 'About me & goals', desc: 'Your bio, what drives you, and where you\'re headed.' },
+      { label: 'Work history',     desc: 'Roles, companies, and career highlights.' },
+      { label: 'Education',        desc: 'Degrees, institutions, and academic achievements.' },
+    ];
+
+    let angles   = [0, (2*Math.PI)/3, (4*Math.PI)/3];
+    let velocity = 0.0008;
+    const friction = 0.97;
+    const minSpeed = 0.00015;
+
+    let dragging  = false;
+    let lastAngle = 0;
+    let dragVel   = 0;
+    let lastDragT = 0;
+
+    function mouseAngle(e) {
+      const rect = wrap.getBoundingClientRect();
+      const mx = (e.clientX ?? e.touches[0].clientX) - rect.left - cx;
+      const my = (e.clientY ?? e.touches[0].clientY) - rect.top  - cy;
+      return Math.atan2(my / ry, mx / rx);
+    }
+
+    function onDown(e) {
+      dragging  = true;
+      wrap.classList.add('dragging');
+      lastAngle = mouseAngle(e);
+      dragVel   = 0;
+      lastDragT = performance.now();
+    }
+
+    function onMove(e) {
+      if (!dragging) return;
+      const a   = mouseAngle(e);
+      let delta = a - lastAngle;
+      if (delta >  Math.PI) delta -= 2 * Math.PI;
+      if (delta < -Math.PI) delta += 2 * Math.PI;
+      angles    = angles.map(ang => ang + delta);
+      const now = performance.now();
+      const dt  = now - lastDragT || 1;
+      dragVel   = delta / dt;
+      lastAngle = a;
+      lastDragT = now;
+    }
+
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      wrap.classList.remove('dragging');
+      velocity = dragVel * 6;
+      if (Math.abs(velocity) < minSpeed) velocity = minSpeed;
+    }
+
+    function onClick(e) {
+      const rect = wrap.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      let hit = -1, best = 32;
+      nodes.forEach((n, i) => {
+        const nx = cx + rx * Math.cos(angles[i]);
+        const ny = cy + ry * Math.sin(angles[i]);
+        const dist = Math.hypot(mx - nx, my - ny);
+        if (dist < best) { best = dist; hit = i; }
+      });
+      if (hit >= 0) {
+        nodes.forEach(x => x.classList.remove('active'));
+        nodes[hit].classList.add('active');
+        ptitle.textContent = data[hit].label;
+        pdesc.textContent  = data[hit].desc;
+      }
+    }
+
+    wrap.addEventListener('mousedown',  onDown);
+    wrap.addEventListener('touchstart', onDown, { passive: true });
+    window.addEventListener('mousemove',  onMove);
+    window.addEventListener('touchmove',  onMove, { passive: true });
+    window.addEventListener('mouseup',    onUp);
+    window.addEventListener('touchend',   onUp);
+    wrap.addEventListener('click', onClick);
+
+    function render() {
+      nodes.forEach((n, i) => {
+        const x = cx + rx * Math.cos(angles[i]);
+        const y = cy + ry * Math.sin(angles[i]);
+        const depth = (Math.sin(angles[i]) + 1) / 2;
+        const scale = 0.72 + 0.28 * depth;
+        n.style.left      = x + 'px';
+        n.style.top       = y + 'px';
+        n.style.zIndex    = Math.round(depth * 10);
+        n.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+        n.style.opacity   = (0.45 + 0.55 * depth).toFixed(2);
+      });
+    }
+
+    let last = null;
+    function loop(ts) {
+      if (!dragging) {
+        const dt = last ? Math.min(ts - last, 50) : 16;
+        last = ts;
+        angles   = angles.map(a => a + velocity * dt);
+        velocity *= Math.pow(friction, dt / 16);
+        if (Math.abs(velocity) < minSpeed) velocity = minSpeed;
+      } else { last = null; }
+      render();
+      requestAnimationFrame(loop);
+    }
+
+    render();
+    requestAnimationFrame(loop);
+  </script>
+</body>
 </html>
-
