@@ -16,7 +16,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      padding: 24px 16px;
     }
 
     h1 {
@@ -27,6 +27,7 @@
       color: #FDD023;
       margin-bottom: 4px;
       opacity: 0.85;
+      text-align: center;
     }
 
     .sub {
@@ -34,17 +35,25 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: #461D7C;
-      margin-bottom: 48px;
+      margin-bottom: 32px;
       opacity: 0.9;
+      text-align: center;
     }
 
     .wrap {
       position: relative;
-      width: 520px;
-      height: 320px;
+      width: 100%;
+      max-width: 520px;
       cursor: grab;
+      touch-action: none;
     }
     .wrap.dragging { cursor: grabbing; }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      padding-bottom: 61.5%;
+    }
 
     .track {
       position: absolute;
@@ -54,7 +63,6 @@
 
     .node {
       position: absolute;
-      width: 53px; height: 53px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
@@ -65,22 +73,19 @@
       pointer-events: none;
     }
     .node svg {
-      width: 22px; height: 22px;
       fill: #461D7C;
       transition: fill 0.2s;
     }
-    .node.active {
-      background: #461D7C;
-    }
+    .node.active { background: #461D7C; }
     .node.active svg { fill: #FDD023; }
 
     .panel {
-      width: 520px;
-      margin-top: 36px;
+      width: 100%;
+      max-width: 520px;
+      margin-top: 32px;
       padding: 0 4px 0 16px;
       border-left: 2px solid #461D7C;
       min-height: 60px;
-      transition: opacity 0.3s;
     }
     .panel h3 {
       font-size: 11px;
@@ -95,14 +100,19 @@
       color: #aaa;
       line-height: 1.7;
     }
-
-    .hint {
-      margin-top: 28px;
-      font-size: 10px;
-      letter-spacing: 0.18em;
+    .resume-btn {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: #333;
+      color: #FDD023;
+      text-decoration: none;
+      border-bottom: 1px solid #461D7C;
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
     }
+    .resume-btn:hover { border-color: #FDD023; }
   </style>
 </head>
 <body>
@@ -111,40 +121,56 @@
   <p class="sub">Portfolio</p>
 
   <div class="wrap" id="wrap">
-    <svg class="track" viewBox="0 0 520 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="260" cy="160" rx="210" ry="115"
-        stroke="#FDD023" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.18"/>
-    </svg>
-    <div class="node" id="n0">
-      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-    </div>
-    <div class="node" id="n1">
-      <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.33C18 2.53 15.47 0 12 0S6 2.53 6 4.67c0 .45.11.89.18 1.33H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM12 2c1.34 0 2.67.89 2.67 2.67 0 .9-.4 1.68-1 2.23V6H10.33v-.1c-.6-.55-1-1.33-1-2.23C9.33 2.89 10.66 2 12 2zm0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6 8H6v-1.5c0-2 4-3 6-3s6 1 6 3V20z"/></svg>
-    </div>
-    <div class="node" id="n2">
-      <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+    <div class="scene" id="scene">
+      <svg class="track" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="260" cy="160" rx="210" ry="115"
+          stroke="#FDD023" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.18"/>
+      </svg>
+      <div class="node" id="n0">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </div>
+      <div class="node" id="n1">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.33C18 2.53 15.47 0 12 0S6 2.53 6 4.67c0 .45.11.89.18 1.33H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM12 2c1.34 0 2.67.89 2.67 2.67 0 .9-.4 1.68-1 2.23V6H10.33v-.1c-.6-.55-1-1.33-1-2.23C9.33 2.89 10.66 2 12 2zm0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6 8H6v-1.5c0-2 4-3 6-3s6 1 6 3V20z"/></svg>
+      </div>
+      <div class="node" id="n2">
+        <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+      </div>
     </div>
   </div>
 
-  <div class="panel" id="panel">
-    <h3 id="ptitle">Select an icon</h3>
-    <p id="pdesc">Click any node to expand its section.</p>
+  <div class="panel" id="panel" style="border-left-color: transparent;">
+    <h3 id="ptitle"></h3>
+    <p id="pdesc"></p>
   </div>
-
-  <p class="hint">drag to spin</p>
 
   <script>
-    const cx = 260, cy = 160, rx = 210, ry = 115;
-    const nodes = document.querySelectorAll('.node');
-    const ptitle = document.getElementById('ptitle');
-    const pdesc  = document.getElementById('pdesc');
-    const wrap   = document.getElementById('wrap');
+    const sceneEl = document.getElementById('scene');
+    const wrap    = document.getElementById('wrap');
+    const nodes   = document.querySelectorAll('.node');
+    const ptitle  = document.getElementById('ptitle');
+    const pdesc   = document.getElementById('pdesc');
+    const panel   = document.getElementById('panel');
 
     const data = [
-      { label: 'About me & goals', desc: 'Your bio, what drives you, and where you\'re headed.' },
-      { label: 'Work history',     desc: 'Roles, companies, and career highlights.' },
-      { label: 'Education',        desc: 'Degrees, institutions, and academic achievements.' },
+      {
+        label: 'About me & goals',
+        desc: 'Your bio, what drives you, and where you\'re headed.',
+        link: null
+      },
+      {
+        label: 'Work History',
+        desc: 'Air Force avionics tech and debriefer, plus a cybersecurity internship. Worked on high-value aircraft systems, troubleshooting, mission reports, and supporting operations. Strong focus on precision, accountability, and problem-solving.',
+        link: { text: 'View résumé ↗', href: 'resume.pdf' }
+      },
+      {
+        label: 'Education',
+        desc: 'Community College of the Air Force (2017–2018) – Integrated Fighter Aircraft Avionics. LSU (2023–2027) – Information Systems & Analytics, expected May 2027.',
+        link: null
+      },
     ];
+
+    const CX = 260, CY = 160, RX = 210, RY = 115;
+    const W = 520;
 
     let angles   = [0, (2*Math.PI)/3, (4*Math.PI)/3];
     let velocity = 0.0008;
@@ -156,11 +182,29 @@
     let dragVel   = 0;
     let lastDragT = 0;
 
+    function getScale() {
+      return sceneEl.getBoundingClientRect().width / W;
+    }
+
+    function sizeNodes() {
+      const s = getScale();
+      const size     = Math.round(53 * s);
+      const iconSize = Math.round(22 * s);
+      nodes.forEach(n => {
+        n.style.width  = size + 'px';
+        n.style.height = size + 'px';
+        const svg = n.querySelector('svg');
+        svg.style.width  = iconSize + 'px';
+        svg.style.height = iconSize + 'px';
+      });
+    }
+
     function mouseAngle(e) {
-      const rect = wrap.getBoundingClientRect();
-      const mx = (e.clientX ?? e.touches[0].clientX) - rect.left - cx;
-      const my = (e.clientY ?? e.touches[0].clientY) - rect.top  - cy;
-      return Math.atan2(my / ry, mx / rx);
+      const rect = sceneEl.getBoundingClientRect();
+      const s  = getScale();
+      const mx = ((e.clientX ?? e.touches[0].clientX) - rect.left) / s - CX;
+      const my = ((e.clientY ?? e.touches[0].clientY) - rect.top)  / s - CY;
+      return Math.atan2(my / RY, mx / RX);
     }
 
     function onDown(e) {
@@ -194,13 +238,14 @@
     }
 
     function onClick(e) {
-      const rect = wrap.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      let hit = -1, best = 32;
+      const rect = sceneEl.getBoundingClientRect();
+      const s  = getScale();
+      const mx = (e.clientX - rect.left) / s;
+      const my = (e.clientY - rect.top)  / s;
+      let hit = -1, best = 34;
       nodes.forEach((n, i) => {
-        const nx = cx + rx * Math.cos(angles[i]);
-        const ny = cy + ry * Math.sin(angles[i]);
+        const nx = CX + RX * Math.cos(angles[i]);
+        const ny = CY + RY * Math.sin(angles[i]);
         const dist = Math.hypot(mx - nx, my - ny);
         if (dist < best) { best = dist; hit = i; }
       });
@@ -209,6 +254,18 @@
         nodes[hit].classList.add('active');
         ptitle.textContent = data[hit].label;
         pdesc.textContent  = data[hit].desc;
+        panel.style.borderLeftColor = '#461D7C';
+        const old = panel.querySelector('.resume-btn');
+        if (old) old.remove();
+        if (data[hit].link) {
+          const a = document.createElement('a');
+          a.className   = 'resume-btn';
+          a.textContent = data[hit].link.text;
+          a.href        = data[hit].link.href;
+          a.target      = '_blank';
+          a.rel         = 'noopener';
+          panel.appendChild(a);
+        }
       }
     }
 
@@ -219,15 +276,17 @@
     window.addEventListener('mouseup',    onUp);
     window.addEventListener('touchend',   onUp);
     wrap.addEventListener('click', onClick);
+    window.addEventListener('resize', sizeNodes);
 
     function render() {
+      const s = getScale();
       nodes.forEach((n, i) => {
-        const x = cx + rx * Math.cos(angles[i]);
-        const y = cy + ry * Math.sin(angles[i]);
+        const x     = CX + RX * Math.cos(angles[i]);
+        const y     = CY + RY * Math.sin(angles[i]);
         const depth = (Math.sin(angles[i]) + 1) / 2;
         const scale = 0.72 + 0.28 * depth;
-        n.style.left      = x + 'px';
-        n.style.top       = y + 'px';
+        n.style.left      = (x * s) + 'px';
+        n.style.top       = (y * s) + 'px';
         n.style.zIndex    = Math.round(depth * 10);
         n.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
         n.style.opacity   = (0.45 + 0.55 * depth).toFixed(2);
@@ -247,6 +306,7 @@
       requestAnimationFrame(loop);
     }
 
+    sizeNodes();
     render();
     requestAnimationFrame(loop);
   </script>
