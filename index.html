@@ -127,6 +127,9 @@
       <div class="node" id="n2">
         <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
       </div>
+      <div class="node" id="n3">
+        <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+      </div>
     </div>
   </div>
 
@@ -159,12 +162,17 @@
         desc: 'Community College of the Air Force (2017–2018) – Integrated Fighter Aircraft Avionics. LSU (2023–2027) – Information Systems & Analytics, expected May 2027.',
         link: null
       },
+      {
+        label: 'Projects',
+        desc: 'Coming soon.',
+        link: null
+      },
     ];
 
     const CX = 260, CY = 160, RX = 210, RY = 115;
     const W = 520;
 
-    let angles   = [0, (2*Math.PI)/3, (4*Math.PI)/3];
+    let angles   = [0, Math.PI/2, Math.PI, (3*Math.PI)/2];
     let velocity = 0.0008;
     const friction = 0.97;
     const minSpeed = 0.00015;
