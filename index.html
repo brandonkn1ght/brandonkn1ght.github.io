@@ -18,7 +18,7 @@
     .panel { width: 100%; max-width: 572px; margin-top: 32px; padding: 0 4px 0 16px; border-left: 2px solid transparent; min-height: 60px; }
     .panel h3 { font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: #FDD023; margin-bottom: 6px; }
     .panel p { font-size: 13px; color: #aaa; line-height: 1.7; white-space: pre-line; }
-    .resume-btn { display: inline-block; margin-top: 10px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #FDD023; text-decoration: none; border-bottom: 1px solid #461D7C; padding-bottom: 1px; transition: border-color 0.2s; }
+    .resume-btn { display: inline-block; margin-top: 10px; margin-right: 20px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #FDD023; text-decoration: none; border-bottom: 1px solid #461D7C; padding-bottom: 1px; transition: border-color 0.2s; }
     .resume-btn:hover { border-color: #FDD023; }
   </style>
 </head>
@@ -53,8 +53,9 @@
       if (hit >= 0) {
         nodes.forEach((x, i) => x.classList.toggle('active', i === hit));
         ptitle.textContent = data[hit].label; pdesc.textContent = data[hit].desc; panel.style.borderLeftColor = '#461D7C';
-        const old = panel.querySelector('.resume-btn'); if (old) old.remove();
-        if (data[hit].link) panel.insertAdjacentHTML('beforeend', `<a class="resume-btn" href="${data[hit].link.href}" target="_blank" rel="noopener">${data[hit].link.text}</a>`);
+        panel.querySelectorAll('.resume-btn').forEach(old => old.remove());
+        const lnk = data[hit].link || data[hit].links;
+        if (lnk) { (Array.isArray(lnk) ? lnk : [lnk]).forEach(l => panel.insertAdjacentHTML('beforeend', `<a class="resume-btn" href="${l.href}" target="_blank" rel="noopener">${l.text}</a>`)); }
       }
     };
     
@@ -91,9 +92,15 @@
           { name: 'ICSimbed', description: 'Embedded ICS configuration and visualization tools.' }
         ];
       }
+      const projNode = { label: 'Projects', desc: '', links: [] };
       projects.forEach(r => {
-        data.push({ label: r.name, desc: r.description || `Project deployment: ${r.name}`, link: { text: 'Visit Site ↗', href: `https://brandon-knight.com/${r.name.replace(/\/$/, '')}` } });
+        const name = r.name.replace(/\/$/, '');
+        projNode.desc += `${name.toUpperCase()}\n${r.description || 'Project deployment.'}\n\n`;
+        projNode.links.push({ text: `${name} ↗`, href: `https://brandon-knight.com/${name}` });
       });
+      projNode.desc = projNode.desc.trim();
+      data.push(projNode);
+      
       data.forEach((item, i) => {
         const n = document.createElement('div'); n.className = 'node'; n.innerHTML = `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>`;
         scene.appendChild(n); nodes.push(n);
