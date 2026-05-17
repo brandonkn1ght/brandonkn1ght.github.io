@@ -1,3 +1,4 @@
+<!-- [CC-STATE: Run=2, TotalSlashed=70] -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,112 +8,35 @@
     body { background: #0a0a0a; color: #f0f0f0; font-family: 'Georgia', serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; }
     h1 { font-size: 13px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: #FDD023; margin-bottom: 4px; opacity: 0.85; text-align: center; }
     .sub { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #461D7C; margin-bottom: 32px; opacity: 0.9; text-align: center; }
-    .wrap { position: relative; width: 100%; max-width: 572px; cursor: grab; touch-action: none; }
-    .wrap.dragging { cursor: grabbing; }
-    .scene { position: relative; width: 100%; padding-bottom: 61.5%; }
-    .track { position: absolute; inset: 0; pointer-events: none; }
+    .wrap { position: relative; width: 100%; max-width: 572px; cursor: grab; touch-action: none; } .wrap.dragging { cursor: grabbing; }
+    .scene { position: relative; width: 100%; padding-bottom: 61.5%; } .track { position: absolute; inset: 0; pointer-events: none; }
     .node { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: translate(-50%, -50%); background: transparent; border: 1.5px solid #461D7C; transition: border-color 0.2s; pointer-events: none; }
-    .node svg { fill: #461D7C; transition: fill 0.2s; }
-    .node.active { background: #461D7C; }
-    .node.active svg { fill: #FDD023; }
+    .node svg { fill: #461D7C; transition: fill 0.2s; } .node.active { background: #461D7C; } .node.active svg { fill: #FDD023; }
     .panel { width: 100%; max-width: 572px; margin-top: 32px; padding: 0 4px 0 16px; border-left: 2px solid transparent; min-height: 60px; }
     .panel h3 { font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: #FDD023; margin-bottom: 6px; }
     .panel p { font-size: 13px; color: #aaa; line-height: 1.7; white-space: pre-line; }
-    .resume-btn { display: inline-block; margin-top: 10px; margin-right: 20px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #FDD023; text-decoration: none; border-bottom: 1px solid #461D7C; padding-bottom: 1px; transition: border-color 0.2s; }
-    .resume-btn:hover { border-color: #FDD023; }
+    .resume-btn { display: inline-block; margin-top: 10px; margin-right: 20px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #FDD023; text-decoration: none; border-bottom: 1px solid #461D7C; padding-bottom: 1px; transition: border-color 0.2s; } .resume-btn:hover { border-color: #FDD023; }
   </style>
 </head>
 <body>
   <h1>Brandon Knight</h1><p class="sub">Portfolio</p>
-  <div class="wrap" id="wrap">
-    <div class="scene" id="scene">
-      <svg class="track" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="260" cy="160" rx="210" ry="115" stroke="#FDD023" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.18"/></svg>
-    </div>
-  </div>
+  <div class="wrap" id="wrap"><div class="scene" id="scene"><svg class="track" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="260" cy="160" rx="210" ry="115" stroke="#FDD023" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.18"/></svg></div></div>
   <div class="panel" id="panel"><h3 id="ptitle"></h3><p id="pdesc"></p></div>
   <script>
     const icons = ['M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z', 'M20 6h-2.18c.07-.44.18-.88.18-1.33C18 2.53 15.47 0 12 0S6 2.53 6 4.67c0 .45.11.89.18 1.33H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM12 2c1.34 0 2.67.89 2.67 2.67 0 .9-.4 1.68-1 2.23V6H10.33v-.1c-.6-.55-1-1.33-1-2.23C9.33 2.89 10.66 2 12 2zm0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6 8H6v-1.5c0-2 4-3 6-3s6 1 6 3V20z', 'M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z', 'M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z'];
-    const data = [
-      { label: 'About Me', desc: 'From Northeast Louisiana. Lived and worked in Japan, Guam, Alaska, and across the U.S. — experiences that shaped how I see things and approach challenges.\n\nBig on growth and learning. I try to move with purpose, build real skills, put out solid work, and be someone people can rely on.\n\nInto bream and bass fishing, LSU Tigers baseball, faith, and all things tech. Right now focused on being a student and getting better step by step — with more to come.', link: { text: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/brandon-knight-/' } },
-      { label: 'Work History', desc: 'Air Force avionics tech and debriefer, plus a cybersecurity internship. Worked on high-value aircraft systems, troubleshooting, mission reports, and supporting operations. Strong focus on precision, accountability, and problem-solving.', link: { text: 'View résumé ↗', href: 'resume.pdf' } },
-      { label: 'Education', desc: 'Community College of the Air Force (2017–2018) – Integrated Fighter Aircraft Avionics. LSU (2023–2027) – Information Systems & Analytics, expected May 2027.', link: null }
-    ];
+    const data = [{ label: 'About Me', desc: 'From Northeast Louisiana. Lived and worked in Japan, Guam, Alaska, and across the U.S. — experiences that shaped how I see things and approach challenges.\n\nBig on growth and learning. I try to move with purpose, build real skills, put out solid work, and be someone people can rely on.\n\nInto bream and bass fishing, LSU Tigers baseball, faith, and all things tech. Right now focused on being a student and getting better step by step — with more to come.', link: { text: 'LinkedIn ↗', href: 'https://www.linkedin.com/in/brandon-knight-/' } }, { label: 'Work History', desc: 'Air Force avionics tech and debriefer, plus a cybersecurity internship. Worked on high-value aircraft systems, troubleshooting, mission reports, and supporting operations. Strong focus on precision, accountability, and problem-solving.', link: { text: 'View résumé ↗', href: 'resume.pdf' } }, { label: 'Education', desc: 'Community College of the Air Force (2017–2018) – Integrated Fighter Aircraft Avionics. LSU (2023–2027) – Information Systems & Analytics, expected May 2027.', link: null }];
     let angles = [], nodes = [], dragging = false, lastAngle = 0, dragVel = 0, lastDragT = 0, velocity = 0.0008, last = null;
     const CX = 260, CY = 160, RX = 210, RY = 115, W = 520, friction = 0.97, minSpeed = 0.00015, sc = () => scene.getBoundingClientRect().width / W;
-    
-    const mouseAngle = e => Math.atan2(((e.clientY ?? e.touches[0].clientX) - scene.getBoundingClientRect().top) / sc() - CY, ((e.clientX ?? e.touches[0].clientX) - scene.getBoundingClientRect().left) / sc() - CX);
-    const sizeNodes = () => { const s = sc(), sz = Math.round(53 * s) + 'px', isz = Math.round(22 * s) + 'px'; nodes.forEach(n => { n.style.width = n.style.height = sz; n.querySelector('svg').style.width = n.querySelector('svg').style.height = isz; }); };
+    const mouseAngle = e => { const r = scene.getBoundingClientRect(), t = e.touches?.[0] || e; return Math.atan2((t.clientY - r.top) / sc() - CY, (t.clientX - r.left) / sc() - CX); };
+    const sizeNodes = () => { const s = sc(); nodes.forEach(n => { n.style.width = n.style.height = Math.round(53 * s) + 'px'; n.querySelector('svg').style.width = n.querySelector('svg').style.height = Math.round(22 * s) + 'px'; }); };
     const onDown = e => { dragging = true; wrap.classList.add('dragging'); lastAngle = mouseAngle(e); dragVel = 0; lastDragT = performance.now(); };
-    const onMove = e => { if (!dragging) return; const a = mouseAngle(e); let d = a - lastAngle; d = d > Math.PI ? d - 2 * Math.PI : (d < -Math.PI ? d + 2 * Math.PI : d); angles = angles.map(ang => ang + d); const now = performance.now(); dragVel = d / (now - lastDragT || 1); lastAngle = a; lastDragT = now; };
-    const onUp = () => { if (dragging) { dragging = false; wrap.classList.remove('dragging'); velocity = Math.abs(dragVel * 6) < minSpeed ? minSpeed : dragVel * 6; } };
-    
-    const onClick = e => {
-      const r = scene.getBoundingClientRect(), s = sc(), mx = (e.clientX - r.left) / s, my = (e.clientY - r.top) / s;
-      let hit = -1, best = 34;
-      nodes.forEach((n, i) => { const dist = Math.hypot(mx - (CX + RX * Math.cos(angles[i])), my - (CY + RY * Math.sin(angles[i]))); if (dist < best) { best = dist; hit = i; } });
-      if (hit >= 0) {
-        nodes.forEach((x, i) => x.classList.toggle('active', i === hit));
-        ptitle.textContent = data[hit].label; pdesc.textContent = data[hit].desc; panel.style.borderLeftColor = '#461D7C';
-        panel.querySelectorAll('.resume-btn').forEach(old => old.remove());
-        const lnk = data[hit].link || data[hit].links;
-        if (lnk) { (Array.isArray(lnk) ? lnk : [lnk]).forEach(l => panel.insertAdjacentHTML('beforeend', `<a class="resume-btn" href="${l.href}" target="_blank" rel="noopener">${l.text}</a>`)); }
-      }
-    };
-    
-    const render = () => {
-      const s = sc();
-      nodes.forEach((n, i) => {
-        const depth = (Math.sin(angles[i]) + 1) / 2;
-        n.style.left = ((CX + RX * Math.cos(angles[i])) * s) + 'px'; n.style.top = ((CY + RY * Math.sin(angles[i])) * s) + 'px'; n.style.zIndex = Math.round(depth * 10);
-        n.style.transform = `translate(-50%,-50%) scale(${(0.72 + 0.28 * depth).toFixed(3)})`; n.style.opacity = (0.45 + 0.55 * depth).toFixed(2);
-      });
-    };
-    
-    const loop = ts => {
-      if (!dragging) {
-        const dt = last ? Math.min(ts - last, 50) : 16; last = ts;
-        angles = angles.map(a => a + velocity * dt); velocity *= Math.pow(friction, dt / 16);
-        if (Math.abs(velocity) < minSpeed) velocity = minSpeed;
-      } else last = null;
-      render(); requestAnimationFrame(loop);
-    };
-    
-    async function init() {
-      let projects = [];
-      try {
-        const res = await fetch('https://api.github.com/users/brandon-knight/repos');
-        if (res.ok) {
-          const repos = await res.json();
-          projects = repos.filter(r => r.has_pages || ['futures', 'ICSimbed'].some(p => r.name.toLowerCase().includes(p.toLowerCase())));
-        }
-      } catch {}
-      if (!projects.length) {
-        projects = [
-          { name: 'Futures', description: 'A live stock tracker built with vanilla HTML/CSS/JS.' },
-          { name: 'ICSimbed', description: 'Embedded ICS configuration and visualization tools.' }
-        ];
-      }
-      const projNode = { label: 'Projects', desc: '', links: [] };
-      projects.forEach(r => {
-        const name = r.name.replace(/\/$/, '');
-        projNode.desc += `${name.toUpperCase()}\n${r.description || 'Project deployment.'}\n\n`;
-        projNode.links.push({ text: `${name} ↗`, href: `https://brandon-knight.com/${name}` });
-      });
-      projNode.desc = projNode.desc.trim();
-      data.push(projNode);
-      
-      data.forEach((item, i) => {
-        const n = document.createElement('div'); n.className = 'node'; n.innerHTML = `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>`;
-        scene.appendChild(n); nodes.push(n);
-      });
-      angles = data.map((_, i) => (i * 2 * Math.PI) / data.length);
-      sizeNodes(); render(); requestAnimationFrame(loop);
-    }
-    
-    ['mousedown', 'touchstart'].forEach(e => wrap.addEventListener(e, onDown, { passive: e==='touchstart' }));
-    ['mousemove', 'touchmove'].forEach(e => window.addEventListener(e, onMove, { passive: e==='touchmove' }));
-    ['mouseup', 'touchend'].forEach(e => window.addEventListener(e, onUp));
-    wrap.addEventListener('click', onClick); window.addEventListener('resize', sizeNodes); init();
+    const onMove = e => { if (!dragging) return; const a = mouseAngle(e), now = performance.now(), d = Math.atan2(Math.sin(a - lastAngle), Math.cos(a - lastAngle)); angles = angles.map(ang => ang + d); dragVel = d / (now - lastDragT || 1); lastAngle = a; lastDragT = now; };
+    const onUp = () => dragging && (dragging = false, wrap.classList.remove('dragging'), velocity = Math.abs(dragVel * 6) < minSpeed ? minSpeed : dragVel * 6);
+    const onClick = e => { const r = scene.getBoundingClientRect(), s = sc(), mx = (e.clientX - r.left) / s, my = (e.clientY - r.top) / s; let hit = -1, best = 34; nodes.forEach((n, i) => { const d = Math.hypot(mx - (CX + RX * Math.cos(angles[i])), my - (CY + RY * Math.sin(angles[i]))); if (d < best) { best = d; hit = i; } }); if (hit >= 0) { nodes.forEach((x, i) => x.classList.toggle('active', i === hit)); ptitle.textContent = data[hit].label; pdesc.textContent = data[hit].desc; panel.style.borderLeftColor = '#461D7C'; panel.querySelectorAll('.resume-btn').forEach(old => old.remove()); [].concat(data[hit].link || data[hit].links || []).forEach(l => panel.insertAdjacentHTML('beforeend', `<a class="resume-btn" href="${l.href}" target="_blank" rel="noopener">${l.text}</a>`)); } };
+    const loop = ts => { if (dragging) last = null; else { const dt = last ? Math.min(ts - last, 50) : 16; last = ts; angles = angles.map(a => a + velocity * dt); if (Math.abs(velocity *= Math.pow(friction, dt / 16)) < minSpeed) velocity = minSpeed; } render(); requestAnimationFrame(loop); }, render = () => { const s = sc(); nodes.forEach((n, i) => { const d = (Math.sin(angles[i]) + 1) / 2; Object.assign(n.style, { left: `${(CX + RX * Math.cos(angles[i])) * s}px`, top: `${(CY + RY * Math.sin(angles[i])) * s}px`, zIndex: Math.round(d * 10), transform: `translate(-50%,-50%) scale(${(0.72 + 0.28 * d).toFixed(3)})`, opacity: (0.45 + 0.55 * d).toFixed(2) }); }); };
+    async function init() { let p = []; try { let r = await fetch('https://api.github.com/users/brandon-knight/repos'); if (r.ok) p = (await r.json()).filter(x => x.has_pages || /futures|ICSimbed/i.test(x.name)); } catch {} if (!p.length) p = [{ name: 'Futures', description: 'A live stock tracker built with vanilla HTML/CSS/JS.' }, { name: 'ICSimbed', description: 'Embedded ICS configuration and visualization tools.' }]; data.push({ label: 'Projects', desc: p.map(r => `${r.name.replace(/\/$/, '').toUpperCase()}\n${r.description || 'Project deployment.'}`).join('\n\n'), links: p.map(r => ({ text: `${r.name.replace(/\/$/, '')} ↗`, href: `https://brandon-knight.com/${r.name.replace(/\/$/, '')}` })) }); data.forEach((_, i) => { let n = document.createElement('div'); n.className = 'node'; n.innerHTML = `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>`; scene.appendChild(n); nodes.push(n); }); angles = data.map((_, i) => i * 2 * Math.PI / data.length); sizeNodes(); render(); requestAnimationFrame(loop); }
+    const listen = (t, el, f) => t.split(' ').forEach(e => el.addEventListener(e, f, { passive: true }));
+    listen('mousedown touchstart', wrap, onDown); listen('mousemove touchmove', window, onMove); listen('mouseup touchend', window, onUp); wrap.addEventListener('click', onClick); window.addEventListener('resize', sizeNodes); init();
   </script>
 </body>
 </html>
