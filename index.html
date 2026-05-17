@@ -77,17 +77,23 @@
     };
     
     async function init() {
+      let projects = [];
       try {
-        const res = await fetch('https://api.github.com/users/brandon-knight/repos'); if (!res.ok) throw 1;
-        (await res.json()).filter(r => r.has_pages || ['futures', 'ICSimbed'].includes(r.name)).forEach(r => {
-          data.push({ label: r.name, desc: r.description || `Project deployment: ${r.name}`, link: { text: 'Visit Site ↗', href: `https://brandon-knight.com/${r.name}` } });
-        });
-      } catch {
-        data.push(
-          { label: 'Futures', desc: 'A live stock tracker built with vanilla HTML/CSS/JS.', link: { text: 'Futures ↗', href: 'https://brandon-knight.com/futures' } },
-          { label: 'ICSimbed', desc: 'Embedded ICS configuration and visualization tools.', link: { text: 'ICSimbed ↗', href: 'https://brandon-knight.com/ICSimbed/' } }
-        );
+        const res = await fetch('https://api.github.com/users/brandon-knight/repos');
+        if (res.ok) {
+          const repos = await res.json();
+          projects = repos.filter(r => r.has_pages || ['futures', 'ICSimbed'].some(p => r.name.toLowerCase().includes(p.toLowerCase())));
+        }
+      } catch {}
+      if (!projects.length) {
+        projects = [
+          { name: 'Futures', description: 'A live stock tracker built with vanilla HTML/CSS/JS.' },
+          { name: 'ICSimbed', description: 'Embedded ICS configuration and visualization tools.' }
+        ];
       }
+      projects.forEach(r => {
+        data.push({ label: r.name, desc: r.description || `Project deployment: ${r.name}`, link: { text: 'Visit Site ↗', href: `https://brandon-knight.com/${r.name.replace(/\/$/, '')}` } });
+      });
       data.forEach((item, i) => {
         const n = document.createElement('div'); n.className = 'node'; n.innerHTML = `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>`;
         scene.appendChild(n); nodes.push(n);
