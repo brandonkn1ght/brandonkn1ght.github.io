@@ -28,7 +28,9 @@ const sizeNodes = () => {
     });
 };
 
-const onDown = e => { dragging = true; wrap.classList.add('dragging'); lastAngle = mouseAngle(e); dragVel = 0; lastDragT = performance.now(); };
+const onDown = e => {
+    dragging = true; wrap.classList.add('dragging'); lastAngle = mouseAngle(e); dragVel = 0; lastDragT = performance.now();
+};
 
 const onMove = e => {
     if (!dragging) return;
@@ -36,7 +38,10 @@ const onMove = e => {
     angles = angles.map(ang => ang + d); dragVel = d / (now - lastDragT || 1); lastAngle = a; lastDragT = now;
 };
 
-const onUp = () => { if (dragging) { dragging = false; wrap.classList.remove('dragging'); velocity = Math.abs(dragVel * 6) < minSpeed ? minSpeed : dragVel * 6; } };
+const onUp = () => {
+    if (!dragging) return;
+    dragging = false; wrap.classList.remove('dragging'); velocity = Math.abs(dragVel * 6) < minSpeed ? minSpeed : dragVel * 6;
+};
 
 const onClick = e => {
     const r = scene.getBoundingClientRect(), s = sc(), mx = (e.clientX - r.left) / s, my = (e.clientY - r.top) / s;
@@ -50,9 +55,7 @@ const onClick = e => {
         ptitle.textContent = data[hit].label; pdesc.textContent = data[hit].desc; panel.style.borderLeftColor = '#461D7C';
         panel.querySelectorAll('.resume-btn').forEach(old => old.remove());
         [].concat(data[hit].link || data[hit].links || []).forEach(l => {
-            const a = document.createElement('a');
-            Object.assign(a, { className: 'resume-btn', href: l.href, target: '_blank', rel: 'noopener', textContent: l.text });
-            panel.appendChild(a);
+            panel.appendChild(Object.assign(document.createElement('a'), { className: 'resume-btn', href: l.href, target: '_blank', rel: 'noopener', textContent: l.text }));
         });
     }
 };
@@ -61,8 +64,8 @@ const loop = ts => {
     if (dragging) last = null;
     else {
         const dt = last ? Math.min(ts - last, 50) : 16; last = ts;
-        angles = angles.map(a => a + velocity * dt); velocity *= Math.pow(friction, dt / 16);
-        if (Math.abs(velocity) < minSpeed) velocity = minSpeed;
+        angles = angles.map(a => a + velocity * dt);
+        velocity = Math.abs(velocity * Math.pow(friction, dt / 16)) < minSpeed ? minSpeed : velocity * Math.pow(friction, dt / 16);
     }
     render(); requestAnimationFrame(loop);
 };
@@ -70,9 +73,9 @@ const loop = ts => {
 const render = () => {
     const s = sc();
     nodes.forEach((n, i) => {
-        const a = angles[i], d = (Math.sin(a) + 1) / 2;
+        const d = (Math.sin(angles[i]) + 1) / 2;
         Object.assign(n.style, {
-            left: `${(CX + RX * Math.cos(a)) * s}px`, top: `${(CY + RY * Math.sin(a)) * s}px`, zIndex: Math.round(d * 10),
+            left: `${(CX + RX * Math.cos(angles[i])) * s}px`, top: `${(CY + RY * Math.sin(angles[i])) * s}px`, zIndex: Math.round(d * 10),
             transform: `translate(-50%,-50%) scale(${(0.72 + 0.28 * d).toFixed(3)})`, opacity: (0.45 + 0.55 * d).toFixed(2)
         });
     });
@@ -81,10 +84,10 @@ const render = () => {
 async function init() {
     let p = [];
     try {
-        const r = await fetch('https://api.github.com/users/brandon-knight/repos');
-        if (r.ok) p = await r.json();
+        let r = await fetch('https://api.github.com/users/brandon-knight/repos');
+        if (r.ok) p = (await r.json()).filter(x => x.has_pages || /futures|ICSimbed|DateMe/i.test(x.name));
+        else console.warn(`GitHub Sync Alert: Connection returned status code ${r.status}`);
     } catch (e) { console.error("System Core Recovery: GitHub Fetch Engine Fault: ", e); }
-    p = p.filter(x => x.has_pages || /futures|ICSimbed|DateMe/i.test(x.name));
     if (!p.length) p = [
         { name: 'DateMe', description: 'Interactive repository project.' },
         { name: 'futures', description: 'A live stock tracker built with vanilla HTML/CSS/JS.' },
@@ -93,11 +96,10 @@ async function init() {
     data.push({
         label: 'Projects',
         desc: p.map(r => `${r.name.replace(/\/$/, '').toUpperCase()}\n${r.description || 'Project deployment.'}`).join('\n\n'),
-        links: p.map(r => { const n = r.name.replace(/\/$/, ''); return { text: `${n === 'futures' ? 'Futures' : n === 'DateMe' ? 'DateMe' : n} ↗`, href: `https://brandon-knight.com/${n}` }; })
+        links: p.map(r => { const n = r.name.replace(/\/$/, ''); return { text: `${{ futures: 'Futures', DateMe: 'DateMe' }[n] || n} ↗`, href: `https://brandon-knight.com/${n}` }; })
     });
     data.forEach((_, i) => {
-        const n = document.createElement('div');
-        Object.assign(n, { className: 'node', innerHTML: `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>` });
+        let n = Object.assign(document.createElement('div'), { className: 'node', innerHTML: `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>` });
         scene.appendChild(n); nodes.push(n);
     });
     angles = data.map((_, i) => i * 2 * Math.PI / data.length); sizeNodes(); render(); requestAnimationFrame(loop);
