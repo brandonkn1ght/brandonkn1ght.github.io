@@ -40,14 +40,19 @@ const onUp = () => { if (dragging) { dragging = false; wrap.classList.remove('dr
 
 const onClick = e => {
     const r = scene.getBoundingClientRect(), s = sc(), mx = (e.clientX - r.left) / s, my = (e.clientY - r.top) / s;
-    const dists = nodes.map((_, i) => Math.hypot(mx - (CX + RX * Math.cos(angles[i])), my - (CY + RY * Math.sin(angles[i]))));
-    const minD = Math.min(...dists), hit = minD < 34 ? dists.indexOf(minD) : -1;
+    let hit = -1, best = 34;
+    nodes.forEach((n, i) => {
+        const d = Math.hypot(mx - (CX + RX * Math.cos(angles[i])), my - (CY + RY * Math.sin(angles[i])));
+        if (d < best) { best = d; hit = i; }
+    });
     if (hit >= 0) {
         nodes.forEach((x, i) => x.classList.toggle('active', i === hit));
         ptitle.textContent = data[hit].label; pdesc.textContent = data[hit].desc; panel.style.borderLeftColor = '#461D7C';
         panel.querySelectorAll('.resume-btn').forEach(old => old.remove());
         [].concat(data[hit].link || data[hit].links || []).forEach(l => {
-            panel.appendChild(Object.assign(document.createElement('a'), { className: 'resume-btn', href: l.href, target: '_blank', rel: 'noopener', textContent: l.text }));
+            const a = document.createElement('a');
+            Object.assign(a, { className: 'resume-btn', href: l.href, target: '_blank', rel: 'noopener', textContent: l.text });
+            panel.appendChild(a);
         });
     }
 };
@@ -77,19 +82,27 @@ async function init() {
     let p = [];
     try {
         const r = await fetch('https://api.github.com/users/brandon-knight/repos');
-        if (r.ok) p = (await r.json()).filter(x => x.has_pages || /futures|ICSimbed|DateMe/i.test(x.name));
-        else console.warn(`GitHub Sync Alert: Connection returned status code ${r.status}`);
+        if (r.ok) p = await r.json();
     } catch (e) { console.error("System Core Recovery: GitHub Fetch Engine Fault: ", e); }
-    if (!p.length) p = [{ name: 'DateMe', description: 'Interactive repository project.' }, { name: 'futures', description: 'A live stock tracker built with vanilla HTML/CSS/JS.' }, { name: 'ICSimbed', description: 'Embedded ICS configuration and visualization tools.' }];
-    p = p.map(r => ({ n: r.name.replace(/\/$/, ''), d: r.description || 'Project deployment.' }));
+    p = p.filter(x => x.has_pages || /futures|ICSimbed|DateMe/i.test(x.name));
+    if (!p.length) p = [
+        { name: 'DateMe', description: 'Interactive repository project.' },
+        { name: 'futures', description: 'A live stock tracker built with vanilla HTML/CSS/JS.' },
+        { name: 'ICSimbed', description: 'Embedded ICS configuration and visualization tools.' }
+    ];
     data.push({
         label: 'Projects',
-        desc: p.map(r => `${r.n.toUpperCase()}\n${r.d}`).join('\n\n'),
-        links: p.map(r => ({ text: `${{ futures: 'Futures', DateMe: 'DateMe' }[r.n] || r.n} ↗`, href: `https://brandon-knight.com/${r.n}` }))
+        desc: p.map(r => `${r.name.replace(/\/$/, '').toUpperCase()}\n${r.description || 'Project deployment.'}`).join('\n\n'),
+        links: p.map(r => { const n = r.name.replace(/\/$/, ''); return { text: `${n === 'futures' ? 'Futures' : n === 'DateMe' ? 'DateMe' : n} ↗`, href: `https://brandon-knight.com/${n}` }; })
     });
-    nodes = data.map((_, i) => scene.appendChild(Object.assign(document.createElement('div'), { className: 'node', innerHTML: `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>` })));
+    data.forEach((_, i) => {
+        const n = document.createElement('div');
+        Object.assign(n, { className: 'node', innerHTML: `<svg viewBox="0 0 24 24"><path d="${icons[i] || icons[3]}"/></svg>` });
+        scene.appendChild(n); nodes.push(n);
+    });
     angles = data.map((_, i) => i * 2 * Math.PI / data.length); sizeNodes(); render(); requestAnimationFrame(loop);
 }
 
-[['mousedown touchstart', wrap, onDown], ['mousemove touchmove', window, onMove], ['mouseup touchend', window, onUp]].forEach(([t, el, f]) => t.split(' ').forEach(e => el.addEventListener(e, f, { passive: true })));
+const listen = (t, el, f) => t.split(' ').forEach(e => el.addEventListener(e, f, { passive: true }));
+listen('mousedown touchstart', wrap, onDown); listen('mousemove touchmove', window, onMove); listen('mouseup touchend', window, onUp);
 wrap.addEventListener('click', onClick); window.addEventListener('resize', sizeNodes); init();
